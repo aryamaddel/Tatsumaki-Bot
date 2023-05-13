@@ -3,6 +3,10 @@ const { REST, Routes, ApplicationCommandOptionType } = require("discord.js");
 
 const commands = [
   {
+    name: "clear-all-messages",
+    description: "Clears all messages younger than 14 days",
+  },
+  {
     name: "roll",
     description: "Rolls a dice",
   },
@@ -21,10 +25,6 @@ const commands = [
         required: true,
       },
     ],
-  },
-  {
-    name: "clear-all-messages",
-    description: "Clears all messages in the channel",
   },
 ];
 
@@ -50,7 +50,13 @@ module.exports = {
   handleInteractions: function (interaction) {
     if (!interaction.isChatInputCommand()) return;
     console.log(interaction.commandName);
-
+    if (interaction.commandName === "clear-all-messages") {
+      interaction.reply("Clearing messages younger than 14 days");
+      interaction.channel.messages.fetch().then((messages) => {
+        interaction.channel.bulkDelete(messages);
+      });
+      interaction.channel.send("Messages cleared");
+    }
     if (interaction.commandName === "roll") {
       const result = Math.floor(Math.random() * 6) + 1;
       interaction.reply(`You rolled a ${result}`);
@@ -78,13 +84,6 @@ module.exports = {
             "Sorry, I couldn't fetch the weather for that location."
           )
         );
-    }
-    if (interaction.commandName === "clear-all-messages") {
-      interaction.reply("Clearing messages younger than 14 days");
-      interaction.channel.messages.fetch().then((messages) => {
-        interaction.channel.bulkDelete(messages);
-      });
-      interaction.channel.send("Messages cleared");
     }
   },
 };
