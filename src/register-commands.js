@@ -22,6 +22,10 @@ const commands = [
       },
     ],
   },
+  {
+    name: "clear-all-messages",
+    description: "Clears all messages in the channel",
+  },
 ];
 
 const rest = new REST().setToken(process.env.TOKEN);
@@ -66,7 +70,7 @@ module.exports = {
           const weather = data.weather[0].description;
           const temp = data.main.temp;
           interaction.reply(
-           `The weather in ${location} has ${weather} with an average temperature of ${temp}°C.`
+            `The weather in ${location} has ${weather} with an average temperature of ${temp}°C.`
           );
         })
         .catch((error) =>
@@ -75,6 +79,12 @@ module.exports = {
           )
         );
     }
-
+    if (interaction.commandName === "clear-all-messages") {
+      interaction.reply("Clearing messages younger than 14 days");
+      interaction.channel.messages.fetch().then((messages) => {
+        interaction.channel.bulkDelete(messages);
+      });
+      interaction.channel.send("Messages cleared");
+    }
   },
 };
