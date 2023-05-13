@@ -3,10 +3,6 @@ const { REST, Routes, ApplicationCommandOptionType } = require("discord.js");
 
 const commands = [
   {
-    name: "clear-all-messages",
-    description: "Clears all messages younger than 14 days",
-  },
-  {
     name: "roll",
     description: "Rolls a dice",
   },
@@ -23,6 +19,31 @@ const commands = [
         description: "The location to get the weather for",
         type: ApplicationCommandOptionType.String,
         required: true,
+      },
+    ],
+  },
+  {
+    name: "truth",
+    description: "Gets a random truth question",
+    options: [
+      {
+        name: "rating",
+        description: "The rating of the truth question",
+        type: ApplicationCommandOptionType.String,
+        choices: [
+          {
+            name: "r",
+            value: "r",
+          },
+          {
+            name: "pg-13",
+            value: "pg-13",
+          },
+          {
+            name: "pg",
+            value: "pg",
+          },
+        ],
       },
     ],
   },
@@ -50,13 +71,6 @@ module.exports = {
   handleInteractions: function (interaction) {
     if (!interaction.isChatInputCommand()) return;
     console.log(interaction.commandName);
-    if (interaction.commandName === "clear-all-messages") {
-      interaction.reply("Clearing messages younger than 14 days");
-      interaction.channel.messages.fetch().then((messages) => {
-        interaction.channel.bulkDelete(messages);
-      });
-      interaction.channel.send("Messages cleared");
-    }
     if (interaction.commandName === "roll") {
       const result = Math.floor(Math.random() * 6) + 1;
       interaction.reply(`You rolled a ${result}`);
