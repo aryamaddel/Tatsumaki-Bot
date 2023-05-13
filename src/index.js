@@ -1,7 +1,7 @@
 require("dotenv").config();
 const { Client, IntentsBitField, Message } = require("discord.js");
 const messageHandler = require("./messageHandler");
-const interactionHandler = require("./slash-commands.js");
+const interactionHandler = require("./register-commands.js");
 
 const client = new Client({
   intents: [
