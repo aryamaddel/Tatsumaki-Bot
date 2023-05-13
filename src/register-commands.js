@@ -27,23 +27,20 @@ const commands = [
     description: "Gets a random truth question",
     options: [
       {
-        name: "rating",
+        name: "above-18",
         description: "The rating of the truth question",
-        type: ApplicationCommandOptionType.String,
-        choices: [
-          {
-            name: "r",
-            value: "r",
-          },
-          {
-            name: "pg-13",
-            value: "pg-13",
-          },
-          {
-            name: "pg",
-            value: "pg",
-          },
-        ],
+        type: ApplicationCommandOptionType.Boolean,
+      },
+    ],
+  },
+  {
+    name: "dare",
+    description: "Gets a random dare",
+    options: [
+      {
+        name: "above-18",
+        description: "The rating of the dare",
+        type: ApplicationCommandOptionType.Boolean,
       },
     ],
   },
@@ -98,6 +95,36 @@ module.exports = {
             "Sorry, I couldn't fetch the weather for that location."
           )
         );
+    }
+    if (interaction.commandName === "truth") {
+      if (interaction.options.get("above-18")?.value) {
+        fetch("https://api.truthordarebot.xyz/v1/truth?rating=r")
+          .then((response) => response.json())
+          .then((data) => {
+            interaction.reply(data.question);
+          });
+      } else {
+        fetch("https://api.truthordarebot.xyz/v1/truth")
+          .then((response) => response.json())
+          .then((data) => {
+            interaction.reply(data.question);
+          });
+      }
+    }
+    if (interaction.commandName === "dare") {
+      if (interaction.options.get("above-18")?.value) {
+        fetch("https://api.truthordarebot.xyz/v1/dare?rating=r")
+          .then((response) => response.json())
+          .then((data) => {
+            interaction.reply(data.question);
+          });
+      } else {
+        fetch("https://api.truthordarebot.xyz/v1/dare")
+          .then((response) => response.json())
+          .then((data) => {
+            interaction.reply(data.question);
+          });
+      }
     }
   },
 };
