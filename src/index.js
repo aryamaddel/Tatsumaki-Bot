@@ -20,7 +20,6 @@ client.on("messageCreate", messageHandler.handleMessage);
 
 client.on("interactionCreate", interactionHandler.handleInteractions);
 
-client.login(process.env.TOKEN)
-  .catch((error) => {
-    console.error("Failed to log in:", error);
-  });
+client.login(process.env.TOKEN).catch((error) => {
+  console.error("Failed to log in:", error);
+});
