@@ -3,10 +3,10 @@ module.exports = {
     console.log("Message: " + message.content + " from " + message.author.tag);
     if (message.author.bot) return;
 
-    if (message.content === "hi") {
+    if (message.content.toLowerCase() === "hi") {
       message.reply("Hello!");
     }
-    if (message.content === "cat" || message.content === "meow") {
+    if (message.content.toLowerCase() === "cat" || message.content.toLowerCase() === "meow") {
       const url = "https://api.thecatapi.com/v1/images/search";
       fetch(url)
         .then((response) => response.json())
@@ -18,7 +18,7 @@ module.exports = {
           message.reply("Sorry, I couldn't fetch a cat picture right now.")
         );
     }
-    if (message.content === "meme") {
+    if (message.content.toLowerCase() === "meme") {
       const url = "https://meme-api.com/gimme";
       fetch(url)
         .then((response) => response.json())
