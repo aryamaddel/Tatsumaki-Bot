@@ -12,12 +12,15 @@ const client = new Client({
   ],
 });
 
-client.on("ready", (c) => {
-  console.log(`✅ Logged in as ${c.user.tag}`);
+client.on("ready", () => {
+  console.log(`✅ Logged in as ${client.user.tag}`);
 });
 
 client.on("messageCreate", messageHandler.handleMessage);
 
 client.on("interactionCreate", interactionHandler.handleInteractions);
 
-client.login(process.env.TOKEN);
+client.login(process.env.TOKEN)
+  .catch((error) => {
+    console.error("Failed to log in:", error);
+  });
