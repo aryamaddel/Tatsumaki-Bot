@@ -1,2 +1,3 @@
 # Tatsumaki-Bot
 A discord bot, does a few things, for now....
+![Alt text](assets/tatsumaki.jpg)
