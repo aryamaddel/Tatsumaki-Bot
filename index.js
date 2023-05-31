@@ -1,11 +1,10 @@
 const { token } = require('./config.json');
 const fs = require('node:fs');
 const path = require('node:path');
-// Require the necessary discord.js classes
 const { Client, Collection, Events, GatewayIntentBits } = require('discord.js');
 
-// Create a new client instance
-const client = new Client({ intents: [GatewayIntentBits.Guilds] });
+// new client instance
+const client = new Client({ intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMessages] });
 
 client.commands = new Collection();
 const foldersPath = path.join(__dirname, 'commands');
@@ -31,8 +30,6 @@ for (const folder of commandFolders) {
 	}
 }
 
-// When the client is ready, run this code (only once)
-// We use 'c' for the event parameter to keep it separate from the already defined 'client'
 client.once(Events.ClientReady, (c) => {
 	console.log(`✅ Logged in as ${c.user.tag}`);
 });
@@ -48,6 +45,7 @@ client.on(Events.InteractionCreate, async (interaction) => {
 
 	try {
 		await command.execute(interaction);
+		console.log(`✅ ${interaction.commandName} command entered by ${interaction.user.tag} was executed successfully.`);
 	}
 	catch (error) {
 		console.error(error);
@@ -66,5 +64,4 @@ client.on(Events.InteractionCreate, async (interaction) => {
 	}
 });
 
-// Log in to Discord with your client's token
 client.login(token);
