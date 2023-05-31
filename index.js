@@ -45,7 +45,6 @@ client.on(Events.InteractionCreate, async (interaction) => {
 
 	try {
 		await command.execute(interaction);
-		console.log(`✅ ${interaction.commandName} command entered by ${interaction.user.tag} was executed successfully.`);
 	}
 	catch (error) {
 		console.error(error);
