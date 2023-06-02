@@ -35,6 +35,7 @@ client.once(Events.ClientReady, (c) => {
 });
 
 client.on(Events.InteractionCreate, async (interaction) => {
+	console.log(`${interaction.user.tag} entered command ${interaction.commandName} at ${new Date().toISOString()}`);
 	if (!interaction.isChatInputCommand()) return;
 	const command = interaction.client.commands.get(interaction.commandName);
 
@@ -45,6 +46,7 @@ client.on(Events.InteractionCreate, async (interaction) => {
 
 	try {
 		await command.execute(interaction);
+		console.log(`${client.user.tag} executed command ${interaction.commandName} at ${new Date().toISOString()}`);
 	}
 	catch (error) {
 		console.error(error);
