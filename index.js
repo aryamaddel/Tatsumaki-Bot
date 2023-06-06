@@ -10,45 +10,55 @@ const client = new Client({
 		GatewayIntentBits.MessageContent],
 });
 
-function loadFiles(botClient, collectionName, folderName) {
-	const collection = new Collection();
-	const foldersPath = path.join(__dirname, folderName);
-	const commandFolders = fs.readdirSync(foldersPath);
+const commandsCollection = new Collection();
+const responsesCollection = new Collection();
 
-	for (const folder of commandFolders) {
-		const commandsPath = path.join(foldersPath, folder);
-		const commandFiles = fs.readdirSync(commandsPath).filter((file) => file.endsWith('.js'));
-		for (const file of commandFiles) {
-			const filePath = path.join(commandsPath, file);
-			const command = require(filePath);
-			switch (collectionName) {
-			case 'commands':
-				if ('data' in command && 'execute' in command) {
-					collection.set(command.data.name, command);
-				}
-				else {
-					console.log(`[WARNING] The command at ${filePath} is missing a required "data" or "execute" property.`);
-				}
-				break;
-			case 'responses':
-				if ('trigger' in command && 'response' in command) {
-					collection.set(command.trigger.toLowerCase(), command.response);
-				}
-				else {
-					console.log(`[WARNING] The response at ${filePath} is missing a required "trigger" or "response" property.`);
-				}
-				break;
-			}
+const commandsFoldersPath = path.join(__dirname, 'commands');
+const commandFolders = fs.readdirSync(commandsFoldersPath);
+
+for (const folder of commandFolders) {
+	const commandsPath = path.join(commandsFoldersPath, folder);
+	const commandFiles = fs.readdirSync(commandsPath).filter((file) => file.endsWith('.js'));
+	for (const file of commandFiles) {
+		const filePath = path.join(commandsPath, file);
+		const command = require(filePath);
+		if ('data' in command && 'execute' in command) {
+			commandsCollection.set(command.data.name, command);
+		}
+		else {
+			console.log(`[WARNING] The command at ${filePath} is missing a required "data" or "execute" property.`);
 		}
 	}
-
-	botClient[collectionName] = collection;
 }
 
+client.commands = commandsCollection;
 
-loadFiles(client, 'commands', 'commands');
-loadFiles(client, 'responses', 'responses');
+const responsesFoldersPath = path.join(__dirname, 'responses');
+const responseFolders = fs.readdirSync(responsesFoldersPath);
 
+for (const folder of responseFolders) {
+	const responsesPath = path.join(responsesFoldersPath, folder);
+	const responseFiles = fs.readdirSync(responsesPath).filter((file) => file.endsWith('.js'));
+	for (const file of responseFiles) {
+		const filePath = path.join(responsesPath, file);
+		const response = require(filePath);
+		if ('trigger' in response && 'response' in response) {
+			if (Array.isArray(response.trigger)) {
+				for (const trigger of response.trigger) {
+					responsesCollection.set(trigger.toLowerCase(), response.response);
+				}
+			}
+			else {
+				responsesCollection.set(response.trigger.toLowerCase(), response.response);
+			}
+		}
+		else {
+			console.log(`[WARNING] The response at ${filePath} is missing a required "trigger" or "response" property.`);
+		}
+	}
+}
+
+client.responses = responsesCollection;
 
 client.once(Events.ClientReady, (c) => console.log(`✅ Logged in as ${c.user.tag}`));
 
