@@ -38,11 +38,8 @@ function loadFiles(botClient, collectionName, folderName) {
 	botClient[collectionName] = collection;
 }
 
-// Call the loadFiles function with the client object as the first argument
 loadFiles(client, 'commands', 'commands');
 loadFiles(client, 'responses', 'responses');
-
-// rest of the code
 
 
 client.once(Events.ClientReady, (c) => console.log(`✅ Logged in as ${c.user.tag}`));
