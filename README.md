@@ -2,4 +2,4 @@
 <p align="center">
     <img src="assets\tatsumaki.jpg" width=150 >
 </p>
-Discord bot that logs in to a server, sets up commands, and deploys them using the Discord REST API. The bot is easy to set up and customize with your own commands.
+This is a Discord bot that reads command and response files from the commands and responses folders respectively and stores them in collections. The bot listens for interactions and messages, and executes commands or sends responses based on the content of the interaction or message. It also has the ability to join and leave voice channels.

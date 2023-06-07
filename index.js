@@ -2,12 +2,15 @@ const { token } = require('./config.json');
 const fs = require('node:fs');
 const path = require('node:path');
 const { Client, Collection, Events, GatewayIntentBits } = require('discord.js');
+const { joinVoiceChannel, VoiceConnectionStatus, getVoiceConnection } = require('@discordjs/voice');
 
 const client = new Client({
 	intents: [
 		GatewayIntentBits.Guilds,
 		GatewayIntentBits.GuildMessages,
-		GatewayIntentBits.MessageContent],
+		GatewayIntentBits.MessageContent,
+		GatewayIntentBits.GuildVoiceStates,
+	],
 });
 
 const commandsCollection = new Collection();
@@ -87,6 +90,24 @@ client.on(Events.MessageCreate, async (message) => {
 	if (response) {
 		const content = typeof response === 'function' ? await response() : response;
 		await message.reply(content);
+	}
+
+	if (message.content.toLowerCase() === 'tatsu join') {
+		const connection = joinVoiceChannel({
+			channelId: message.member.voice.channelId,
+			guildId: message.guild.id,
+			adapterCreator: message.guild.voiceAdapterCreator,
+		});
+		connection.on(VoiceConnectionStatus.Ready, () => {
+			console.log('The connection has entered the Ready state - ready to play audio!');
+		});
+	}
+	if (message.content.toLowerCase() === 'tatsu leave') {
+		const connection = getVoiceConnection(message.guild.id);
+		connection.on(VoiceConnectionStatus.Disconnected, () => {
+			console.log('The connection has entered the Disconnected state - the connection has been destroyed.');
+		});
+		connection.destroy();
 	}
 });
 
