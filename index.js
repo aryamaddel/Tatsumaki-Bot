@@ -1,8 +1,8 @@
-const { token } = require('./config.json');
-const fs = require('node:fs');
-const path = require('node:path');
-const { Client, Collection, Events, GatewayIntentBits } = require('discord.js');
-const { joinVoiceChannel, VoiceConnectionStatus, getVoiceConnection } = require('@discordjs/voice');
+import { token } from './config.json';
+import { readdirSync } from 'node:fs';
+import { join } from 'node:path';
+import { Client, Collection, Events, GatewayIntentBits } from 'discord.js';
+import { joinVoiceChannel, VoiceConnectionStatus, getVoiceConnection } from '@discordjs/voice';
 
 const client = new Client({
 	intents: [
@@ -16,14 +16,14 @@ const client = new Client({
 const commandsCollection = new Collection();
 const responsesCollection = new Collection();
 
-const commandsFoldersPath = path.join(__dirname, 'commands');
-const commandFolders = fs.readdirSync(commandsFoldersPath);
+const commandsFoldersPath = join(__dirname, 'commands');
+const commandFolders = readdirSync(commandsFoldersPath);
 
 for (const folder of commandFolders) {
-	const commandsPath = path.join(commandsFoldersPath, folder);
-	const commandFiles = fs.readdirSync(commandsPath).filter((file) => file.endsWith('.js'));
+	const commandsPath = join(commandsFoldersPath, folder);
+	const commandFiles = readdirSync(commandsPath).filter((file) => file.endsWith('.js'));
 	for (const file of commandFiles) {
-		const filePath = path.join(commandsPath, file);
+		const filePath = join(commandsPath, file);
 		const command = require(filePath);
 		if ('data' in command && 'execute' in command) {
 			commandsCollection.set(command.data.name, command);
@@ -36,14 +36,14 @@ for (const folder of commandFolders) {
 
 client.commands = commandsCollection;
 
-const responsesFoldersPath = path.join(__dirname, 'responses');
-const responseFolders = fs.readdirSync(responsesFoldersPath);
+const responsesFoldersPath = join(__dirname, 'responses');
+const responseFolders = readdirSync(responsesFoldersPath);
 
 for (const folder of responseFolders) {
-	const responsesPath = path.join(responsesFoldersPath, folder);
-	const responseFiles = fs.readdirSync(responsesPath).filter((file) => file.endsWith('.js'));
+	const responsesPath = join(responsesFoldersPath, folder);
+	const responseFiles = readdirSync(responsesPath).filter((file) => file.endsWith('.js'));
 	for (const file of responseFiles) {
-		const filePath = path.join(responsesPath, file);
+		const filePath = join(responsesPath, file);
 		const response = require(filePath);
 		if ('trigger' in response && 'response' in response) {
 			if (Array.isArray(response.trigger)) {
