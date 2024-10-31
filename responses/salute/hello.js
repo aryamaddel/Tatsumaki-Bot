@@ -1,5 +1,3 @@
 // hello.js
-module.exports = {
-	trigger: ['hello', 'hi'],
-	response: 'Hello there!',
-};
+export const trigger = ['hello', 'hi'];
+export const response = 'Hello there!';

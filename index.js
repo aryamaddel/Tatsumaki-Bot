@@ -2,7 +2,6 @@ import { token } from './config.json';
 import { readdirSync } from 'node:fs';
 import { join } from 'node:path';
 import { Client, Collection, Events, GatewayIntentBits } from 'discord.js';
-import { joinVoiceChannel, VoiceConnectionStatus, getVoiceConnection } from '@discordjs/voice';
 
 const client = new Client({
 	intents: [
@@ -92,23 +91,6 @@ client.on(Events.MessageCreate, async (message) => {
 		await message.reply(content);
 	}
 
-	if (message.content.toLowerCase() === 'tatsu join') {
-		const connection = joinVoiceChannel({
-			channelId: message.member.voice.channelId,
-			guildId: message.guild.id,
-			adapterCreator: message.guild.voiceAdapterCreator,
-		});
-		connection.on(VoiceConnectionStatus.Ready, () => {
-			console.log('The connection has entered the Ready state - ready to play audio!');
-		});
-	}
-	if (message.content.toLowerCase() === 'tatsu leave') {
-		const connection = getVoiceConnection(message.guild.id);
-		connection.on(VoiceConnectionStatus.Disconnected, () => {
-			console.log('The connection has entered the Disconnected state - the connection has been destroyed.');
-		});
-		connection.destroy();
-	}
 });
 
 client.login(token);
