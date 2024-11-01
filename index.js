@@ -2,6 +2,7 @@ require("dotenv").config();
 import { readdirSync } from "node:fs";
 import { join } from "node:path";
 import { Client, Collection, Events, GatewayIntentBits } from "discord.js";
+import express from "express"; // Import express
 
 // Helper function to load files from directory
 const loadFiles = (dir, callback) => {
@@ -85,4 +86,17 @@ client.on(Events.MessageCreate, async (message) => {
   }
 });
 
+// Start the bot
 client.login(process.env.TOKEN);
+
+// Set up Express server for keep-alive
+const app = express();
+const port = process.env.PORT || 10000; // Use Render's port
+
+app.get("/", (req, res) => {
+  res.send("Bot is running!"); // Simple response to keep the service alive
+});
+
+app.listen(port, () => {
+  console.log(`Keep-alive server running on port ${port}`);
+});
