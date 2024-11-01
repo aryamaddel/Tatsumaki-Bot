@@ -1,4 +1,4 @@
-require('dotenv').config();
+require("dotenv").config();
 import { readdirSync } from "node:fs";
 import { join } from "node:path";
 import { Client, Collection, Events, GatewayIntentBits } from "discord.js";
@@ -35,7 +35,7 @@ loadFiles("commands", (command, path) => {
   if ("data" in command && "execute" in command) {
     client.commands.set(command.data.name, command);
   } else {
-    console.log(`[WARNING] Command at ${path} missing required properties`);
+    console.warn(`[WARNING] Command at ${path} missing required properties`);
   }
 });
 
@@ -50,7 +50,7 @@ loadFiles("responses", (response, path) => {
       client.responses.set(trigger.toLowerCase(), response.response);
     });
   } else {
-    console.log(`[WARNING] Response at ${path} missing required properties`);
+    console.warn(`[WARNING] Response at ${path} missing required properties`);
   }
 });
 
