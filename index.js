@@ -1,4 +1,4 @@
-import { token } from "./config.json";
+require('dotenv').config();
 import { readdirSync } from "node:fs";
 import { join } from "node:path";
 import { Client, Collection, Events, GatewayIntentBits } from "discord.js";
@@ -85,4 +85,4 @@ client.on(Events.MessageCreate, async (message) => {
   }
 });
 
-client.login(token);
+client.login(process.env.TOKEN);
