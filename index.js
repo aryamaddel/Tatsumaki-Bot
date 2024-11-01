@@ -2,9 +2,8 @@ require("dotenv").config();
 import { readdirSync } from "node:fs";
 import { join } from "node:path";
 import { Client, Collection, Events, GatewayIntentBits } from "discord.js";
-import express from "express"; // Import express
+import express from "express";
 
-// Helper function to load files from directory
 const loadFiles = (dir, callback) => {
   const folderPath = join(__dirname, dir);
   const folders = readdirSync(folderPath);
@@ -20,7 +19,6 @@ const loadFiles = (dir, callback) => {
   });
 };
 
-// Initialize client
 const client = new Client({
   intents: [
     GatewayIntentBits.Guilds,
@@ -30,7 +28,6 @@ const client = new Client({
   ],
 });
 
-// Load commands
 client.commands = new Collection();
 loadFiles("commands", (command, path) => {
   if ("data" in command && "execute" in command) {
@@ -40,7 +37,7 @@ loadFiles("commands", (command, path) => {
   }
 });
 
-// Load responses
+
 client.responses = new Collection();
 loadFiles("responses", (response, path) => {
   if ("trigger" in response && "response" in response) {
@@ -55,7 +52,6 @@ loadFiles("responses", (response, path) => {
   }
 });
 
-// Event handlers
 client.once(Events.ClientReady, (c) =>
   console.log(`✅ Logged in as ${c.user.tag}`)
 );
@@ -86,7 +82,7 @@ client.on(Events.MessageCreate, async (message) => {
   }
 });
 
-// Start the bot
+
 client.login(process.env.TOKEN);
 
 // Set up Express server for keep-alive
