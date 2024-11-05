@@ -1,4 +1,4 @@
-import { readdirSync } from "node:fs";
+import { readdirSync, statSync } from "node:fs";
 import { join } from "node:path";
 
 /**
@@ -10,21 +10,21 @@ import { join } from "node:path";
 export function loadFiles(dir, callback, fileExtension = ".js") {
   try {
     const folderPath = join(process.cwd(), dir);
-    const folders = readdirSync(folderPath);
+    const items = readdirSync(folderPath);
 
-    folders.forEach((folder) => {
-      const filesPath = join(folderPath, folder);
-      const files = readdirSync(filesPath).filter((file) => file.endsWith(fileExtension));
-
-      files.forEach((file) => {
+    items.forEach((item) => {
+      const itemPath = join(folderPath, item);
+      if (statSync(itemPath).isDirectory()) {
+        // Recursively load files from nested directories
+        loadFiles(join(dir, item), callback, fileExtension);
+      } else if (item.endsWith(fileExtension)) {
         try {
-          const filePath = join(filesPath, file);
-          const fileContent = require(filePath);
-          callback(fileContent, filePath);
+          const fileContent = require(itemPath);
+          callback(fileContent, itemPath);
         } catch (error) {
-          console.error(`Error loading file ${file}:`, error);
+          console.error(`Error loading file ${item}:`, error);
         }
-      });
+      }
     });
   } catch (error) {
     console.error(`Error loading directory ${dir}:`, error);
